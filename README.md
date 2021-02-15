@@ -1,4 +1,4 @@
-A python implementation of the UDBF data format. The format is e.g. frequently used in Gantner data acquisition systems.
+A python implementation of the UDBF data format. The format is e.g. frequently used in Gantner Instruments data acquisition systems.
 
 There are two main modules:
 - UDBFParser implements various classes used to read and parse UDBF data.

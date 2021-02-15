@@ -10,7 +10,6 @@ class UDBFFileData(UDBFData):
 
     def __init__(self, infile):
 
-        super().__init__()
 
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO,
@@ -21,12 +20,10 @@ class UDBFFileData(UDBFData):
         binary_reader = BinaryFileReader(infile)
         self.parser = UDBFParser(binary_reader)
 
-        self.logger.debug("Starting data reading")
         timestamps, signals = self.parser.signal()
-        self.logger.debug("Checking data")
-        self.header = self.parser.header
-        self._set_udbf_data(timestamps, signals, self.header)
-        self.logger.debug("Finished data check")
+        header = self.parser.header
+
+        super().__init__(timestamps, signals, header)
 
 
 if __name__ == "__main__":
@@ -43,7 +40,7 @@ if __name__ == "__main__":
 
     udbf_data = UDBFFileData(infile)
 
-    udbf_reader.header.print()
+    udbf_data.header.print()
 
     outfile = options.OUT
     if outfile is not None:

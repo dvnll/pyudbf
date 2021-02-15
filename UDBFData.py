@@ -63,7 +63,7 @@ class UDBFHeader(object):
 
             temp_dict[str(key)] = self.__dict__[key]
 
-        return {self.name: temp_dict}
+        return temp_dict
 
     def print(self):
         print("\nData header:\n")
@@ -74,10 +74,37 @@ class UDBFData(object):
     """
     Data-class for data read as UDBF.
     """
-    def __init__(self):
+    def __init__(self, timestamps, signals, header):
 
-        pass
-        #self.infile_id = "_infile"
+        if len(timestamps) != len(signals):
+            exit_state = "Signal lengths doesn't match timestamp length"
+            raise RuntimeError(exit_state)
+
+        if len(timestamps) == 0:
+            exit_state = "Data contains no events"
+            raise RuntimeError(exit_state)
+
+        self._n_points = len(timestamps)
+        self._channel_signals = np.transpose(signals)
+
+        if len(self._channel_signals) > header.number_of_channels:
+            exit_state = "Have more read-out channels"
+            exit_state += " than expected from header"
+            raise RuntimeError(exit_state)
+
+        if len(self._channel_signals) < header.number_of_channels:
+            exit_state = "Have less read-out channels than"
+            exit_state += " expected from header"
+            raise RuntimeError(exit_state)
+
+        self._n_channels = header.number_of_channels
+
+        self._timestamps = timestamps
+        delta = self.timestamps[-1] - self.timestamps[0]
+        self._runlength = delta.total_seconds()
+
+        self.header = header
+        self._check_channel_signals()
 
     @property
     def n_points(self):
@@ -285,36 +312,4 @@ class UDBFData(object):
 
         return self.channel_signals[channel]
 
-    def _set_udbf_data(self, timestamps, signals, header):
-
-        if len(timestamps) != len(signals):
-            exit_state = "Signal lengths doesn't match timestamp length"
-            raise RuntimeError(exit_state)
-
-        if len(timestamps) == 0:
-            exit_state = "Data contains no events"
-            raise RuntimeError(exit_state)
-
-        self._n_points = len(timestamps)
-        self._channel_signals = np.transpose(signals)
-
-        if len(self._channel_signals) > header.number_of_channels:
-            exit_state = "Have more read-out channels"
-            exit_state += " than expected from header"
-            raise RuntimeError(exit_state)
-
-        if len(self._channel_signals) < header.number_of_channels:
-            exit_state = "Have less read-out channels than"
-            exit_state += " expected from header"
-            raise RuntimeError(exit_state)
-
-        self._n_channels = header.number_of_channels
-
-        self._timestamps = timestamps
-        delta = self.timestamps[-1] - self.timestamps[0]
-        self._runlength = delta.total_seconds()
-
-        self.header = header
-        self._check_channel_signals()
-
-
+ 
