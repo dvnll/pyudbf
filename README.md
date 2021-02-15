@@ -8,4 +8,4 @@ There are two main modules:
 The main entrance to the code is udbf_file_reader.py which reads an UDBF file and converts it into an ASCII file. Call udbf_file_reader.py --help for usage information. The provided methods 
 can be used to create more advanced I/O.
 
-The "test"-folder contains a small UDBF test file for testing.
+The "test"-folder contains a small example UDBF file for testing.
