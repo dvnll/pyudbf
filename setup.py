@@ -27,5 +27,5 @@ setup(name="pyudbf",
       version=PKG_VERSION,
       description=description,
       license="MIT",
-      install_requires=["numpy", "math", "pprint",
+      install_requires=["numpy", "pprint",
                         "typing", "datetime", "os", "struct"])
