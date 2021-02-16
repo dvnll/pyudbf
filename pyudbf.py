@@ -1,5 +1,5 @@
-from pyudbf.UDBFParser import UDBFParser, BinaryFileReader, BinaryReader
-from pyudbf.UDBFData import UDBFData
+from UDBFParser import UDBFParser, BinaryFileReader, BinaryReader
+from UDBFData import UDBFData
 
 
 class UDBFFileReader(UDBFData):

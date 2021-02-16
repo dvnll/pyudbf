@@ -1,4 +1,4 @@
-from pyudbf.UDBFData import UDBFHeader
+from UDBFData import UDBFHeader
 from datetime import datetime, timedelta
 import numpy as np
 import struct
