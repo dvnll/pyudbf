@@ -1,6 +1,10 @@
 from setuptools import setup
 import os
+import sys
 
+
+if sys.version_info < (3,5):
+    sys.exit("Python < 3.5 is not supported.")
 
 def get_version(version_tuple):
     return ".".join(map(str, version_tuple))
