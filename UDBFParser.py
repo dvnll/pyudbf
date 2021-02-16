@@ -1,4 +1,4 @@
-from UDBFData import UDBFHeader
+from pyudbf.UDBFData import UDBFHeader
 from datetime import datetime, timedelta
 import numpy as np
 import os
@@ -6,8 +6,10 @@ import struct
 
 
 class BinaryReader(object):
-    """
-    Helper class to read binary UDBF data.
+    """Helper class to read byte string (bytes) UDBF data.
+
+    Attributes:
+        current_pointer (int): Position of current pointer in the byte string data.
     """
 
     def __init__(self, data: bytes):
@@ -25,14 +27,27 @@ class BinaryReader(object):
             exit_state += "prefix value: " + str(endian_prefix_byte)
             raise RuntimeError(exit_state + ": " + str(e))
 
-    def move_pointer_to(self, new_pointer):
-        self._current_pointer = new_pointer
-
     @property
-    def current_pointer(self):
+    def current_pointer(self) -> int:
         return self._current_pointer
 
-    def unpack(self, data_type, n_bytes):
+    def move_pointer_to(self, new_pointer: int):
+        """Moves the current pointer in the byte string data to new_pointer
+
+        Args:
+            new_pointer (int): New pointer position
+        """
+
+        self._current_pointer = new_pointer
+
+    def unpack(self, data_type: int, n_bytes: int):
+        """Unpack the given number of bytes at the current pointer position 
+        and inpret it as the given data type.
+
+        Args:
+            data_type (int): ID for the data type to unpack.
+            n_bytes (int): Number of bytes to read from the byte string.
+        """
 
         if self.current_pointer == 0:
             endian_prefix = ""
@@ -49,10 +64,14 @@ class BinaryReader(object):
             raise RuntimeError("Cannot interpret file in UDBF. " + str(e))
 
         self._current_pointer += n_bytes
-
         return value
 
-    def read_byte_string(self, length):
+    def read_byte_string(self, length: int) -> str:
+        """Read byte by byte and interpret it as UTF-8 string.
+
+        Args:
+            length (int): Number of bytes to read.
+        """
 
         string = []
         for i in range(length):
@@ -63,20 +82,15 @@ class BinaryReader(object):
 
         return "".join(string)
 
-    def __len__(self):
-
+    def __len__(self) -> int:
         return len(self._data)
 
 
 class BinaryFileReader(BinaryReader):
-    """
-    Implements BinaryReader for a file (infile).
+    """Implements the BinaryReader for a file (infile) instead of byte string data.
     """
 
     def __init__(self, infile: str):
-
-        if os.path.isfile(infile) is False:
-            raise OSError(infile + " not found")
 
         with open(infile, mode="rb") as data_file:
             data = data_file.read()
@@ -89,12 +103,8 @@ class UDBFParser(object):
     must be provided by the BinaryReader given in the constructor.
 
     Attributes:
-    header: UDBFHeader
-        Meta information.
-
-    Methods:
-    signal(channel): (timestamps: list, values: list)
-        Time series for the specified channel.
+        header (UDBFHeader): Meta information for the data.
+        sampling_rate ((float, str)): Value and unit of the data sampling rate.
     """
 
     def __init__(self, reader: BinaryReader, sampling_rate_unit="Hz"):
@@ -169,7 +179,6 @@ class UDBFParser(object):
 
     @property
     def header(self):
-
         header_id = "_header"
         if hasattr(self, header_id):
             return getattr(self, header_id)
@@ -177,13 +186,11 @@ class UDBFParser(object):
         header = UDBFHeader(udbf_version=self.version,
                             vendor=self.vendor,
                             sampling_rate=self.sampling_rate,
-                            number_of_channels=self.number_of_channels,
-                            variable_names=self.variable_names,
-                            variable_directions=self.variable_directions,
-                            variable_types=self.variable_types,
-                            variable_units=self.variable_units,
-                            variable_precision=self.variable_precision,
-                            channel_additional_data=self.channel_additional_data)
+                            channel_names=self.variable_names,
+                            channel_directions=self.variable_directions,
+                            channel_types=self.variable_types,
+                            channel_units=self.variable_units,
+                            channel_precision=self.variable_precision)
 
         self._header = header
 
