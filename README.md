@@ -10,4 +10,4 @@ Technically, there are two main modules:
 - UDBFParser.py implements various classes used to read and parse UDBF data.
 - UDBFData.py implements two data-classes to store UDBF data. The UDBFHeader stores meta-information while the UDBFData class stores e.g. the channel raw-data.
 
-Type python setup.py install to install the package.
+Run "pip install -e ." to pyudbf as package.
