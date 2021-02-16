@@ -1,7 +1,6 @@
-from pyudbf import *
+from pyudbf import UDBFFileReader
 import argparse
 import os
-import time
 import pprint
 
 

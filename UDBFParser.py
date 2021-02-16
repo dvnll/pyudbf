@@ -1,7 +1,6 @@
 from pyudbf.UDBFData import UDBFHeader
 from datetime import datetime, timedelta
 import numpy as np
-import os
 import struct
 
 
@@ -9,7 +8,8 @@ class BinaryReader(object):
     """Helper class to read byte string (bytes) UDBF data.
 
     Attributes:
-        current_pointer (int): Position of current pointer in the byte string data.
+        current_pointer (int): Position of current
+                               pointer in the byte string data.
     """
 
     def __init__(self, data: bytes):
@@ -41,7 +41,7 @@ class BinaryReader(object):
         self._current_pointer = new_pointer
 
     def unpack(self, data_type: int, n_bytes: int):
-        """Unpack the given number of bytes at the current pointer position 
+        """Unpack the given number of bytes at the current pointer position
         and inpret it as the given data type.
 
         Args:
@@ -87,7 +87,8 @@ class BinaryReader(object):
 
 
 class BinaryFileReader(BinaryReader):
-    """Implements the BinaryReader for a file (infile) instead of byte string data.
+    """Implements the BinaryReader for a file (infile)
+       instead of byte string data.
     """
 
     def __init__(self, infile: str):
@@ -99,7 +100,7 @@ class BinaryFileReader(BinaryReader):
 
 
 class UDBFParser(object):
-    """Parses binary data according to the UDBF standard. The binary data 
+    """Parses binary data according to the UDBF standard. The binary data
     must be provided by the BinaryReader given in the constructor.
 
     Attributes:
