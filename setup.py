@@ -28,4 +28,4 @@ setup(name="pyudbf",
       description=description,
       license="MIT",
       install_requires=["numpy", "pprint",
-                        "typing", "datetime", "os", "struct"])
+                        "typing", "datetime", "os"])
