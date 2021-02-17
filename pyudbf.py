@@ -1,4 +1,4 @@
-from UDBFParser import UDBFParser, BinaryFileReader, BinaryReader
+from UDBFParser import UDBFParser, BytesReader
 from UDBFData import UDBFData
 
 
@@ -7,9 +7,11 @@ class UDBFFileReader(UDBFData):
     def __init__(self, infile: str):
 
         self.infile = infile
-
-        binary_reader = BinaryFileReader(infile)
-        parser = UDBFParser(binary_reader)
+        with open(infile, mode="rb") as fin:
+            data = fin.read()
+	
+        reader = BytesReader(data)
+        parser = UDBFParser(reader)
 
         timestamps, signals = parser.signal()
         header = parser.header
@@ -21,8 +23,8 @@ class UDBFBytesReader(UDBFData):
 
     def __init__(self, udbf_data: bytes):
 
-        binary_reader = BinaryReader(udbf_data)
-        parser = UDBFParser(binary_reader)
+        reader = BytesReader(udbf_data)
+        parser = UDBFParser(reader)
 
         timestamps, signals = parser.signal()
         header = parser.header

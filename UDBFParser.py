@@ -4,8 +4,8 @@ import numpy as np
 import struct
 
 
-class BinaryReader(object):
-    """Helper class to read byte string (bytes) UDBF data.
+class BytesReader(object):
+    """Helper class to read byte-string (bytes) UDBF data.
 
     Attributes:
         current_pointer (int): Position of current
@@ -86,29 +86,16 @@ class BinaryReader(object):
         return len(self._data)
 
 
-class BinaryFileReader(BinaryReader):
-    """Implements the BinaryReader for a file (infile)
-       instead of byte string data.
-    """
-
-    def __init__(self, infile: str):
-
-        with open(infile, mode="rb") as data_file:
-            data = data_file.read()
-
-        super().__init__(data)
-
-
 class UDBFParser(object):
-    """Parses binary data according to the UDBF standard. The binary data
-    must be provided by the BinaryReader given in the constructor.
+    """Parses binary data according to the UDBF standard v1.07. The data
+    must be provided by the BytesReader given in the constructor.
 
     Attributes:
         header (UDBFHeader): Meta information for the data.
         sampling_rate ((float, str)): Value and unit of the data sampling rate.
     """
 
-    def __init__(self, reader: BinaryReader, sampling_rate_unit="Hz"):
+    def __init__(self, reader: BytesReader, sampling_rate_unit="Hz"):
 
         self._reader = reader
 
@@ -180,22 +167,14 @@ class UDBFParser(object):
 
     @property
     def header(self):
-        header_id = "_header"
-        if hasattr(self, header_id):
-            return getattr(self, header_id)
-
-        header = UDBFHeader(udbf_version=self.version,
-                            vendor=self.vendor,
-                            sampling_rate=self.sampling_rate,
-                            channel_names=self.variable_names,
-                            channel_directions=self.variable_directions,
-                            channel_types=self.variable_types,
-                            channel_units=self.variable_units,
-                            channel_precision=self.variable_precision)
-
-        self._header = header
-
-        return header
+        return UDBFHeader(udbf_version=self.version,
+                          vendor=self.vendor,
+                          sampling_rate=self.sampling_rate,
+                          channel_names=self.variable_names,
+                          channel_directions=self.variable_directions,
+                          channel_types=self.variable_types,
+                          channel_units=self.variable_units,
+                          channel_precision=self.variable_precision)
 
     def signal(self, signal_type=np.float32):
 
