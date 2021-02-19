@@ -8,4 +8,4 @@ The "tests"-folder contains a small example UDBF file and the reader script "udb
 
 Technically, there are two main modules:
 - UDBFParser.py implements various classes used to read and parse UDBF data.
-- UDBFData.py implements two data-classes to store UDBF data. The UDBFHeader stores meta-information while the UDBFData class stores e.g. the channel raw-data.
+- UDBFData.py implements two data-classes to store UDBF data. The UDBFHeader class stores meta-information while the UDBFData class stores e.g. the channel raw-data.
