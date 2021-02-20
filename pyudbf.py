@@ -3,8 +3,14 @@ from UDBFData import UDBFData
 
 
 class UDBFFileReader(UDBFData):
+    """Class used to read an UDBF file given as filename.
+    """
 
     def __init__(self, infile: str):
+        """
+        Args:
+            infile: Input UDBF filename 
+        """
 
         self.infile = infile
         with open(infile, mode="rb") as fin:
@@ -20,8 +26,14 @@ class UDBFFileReader(UDBFData):
 
 
 class UDBFBytesReader(UDBFData):
+    """Class used to read UDBF data given as bytestring.
+    """
 
     def __init__(self, udbf_data: bytes):
+        """
+        Args:
+            udbf_data: Input UDBF data.
+        """
 
         reader = BytesReader(udbf_data)
         parser = UDBFParser(reader)
