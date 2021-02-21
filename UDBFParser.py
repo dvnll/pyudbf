@@ -36,17 +36,21 @@ class BytesReader(object):
 
         Args:
             new_pointer (int): New pointer position
+        Returns: None
         """
 
         self._current_pointer = new_pointer
 
     def unpack(self, data_type: int, n_bytes: int):
         """Unpack the given number of bytes at the current pointer position
-        and inpret it as the given data type.
+        and interpret it as the given data type.
 
         Args:
             data_type (int): ID for the data type to unpack.
             n_bytes (int): Number of bytes to read from the byte string.
+
+        Returns:
+            np.any: Value of the bytestring, with given data_type.
         """
 
         if self.current_pointer == 0:
@@ -67,10 +71,13 @@ class BytesReader(object):
         return value
 
     def read_byte_string(self, length: int) -> str:
-        """Read byte by byte and interpret it as UTF-8 string.
+        """Read byte by byte for given lengths and interpret it as UTF-8 string.
 
         Args:
             length (int): Number of bytes to read.
+
+        Returns:
+            str: Joined string of UTF-8 strings.
         """
 
         string = []
@@ -93,6 +100,8 @@ class UDBFParser(object):
     Attributes:
         header (UDBFHeader): Meta information for the data.
         sampling_rate ((float, str)): Value and unit of the data sampling rate.
+        _signal_start_byte (int): Pointer position where the signal 
+                                  information in the UDBF data starts.
     """
 
     def __init__(self, reader: BytesReader, sampling_rate_unit="Hz"):
@@ -177,7 +186,15 @@ class UDBFParser(object):
                           channel_precision=self.variable_precision)
 
     def signal(self, signal_type=np.float32):
+        """Timestamps and signals in all channels.
 
+        Args:
+            signal_type (type): Type of signal.
+        Returns:
+            (list[datetime.datetime], list[list[np.any]]):
+                Tuple containing the timestamps and the values for each
+                channnel at that timestamp.
+        """
         timestamp_id = "timestamps"
         signals_id = "signals"
         if hasattr(self, timestamp_id):
@@ -185,7 +202,7 @@ class UDBFParser(object):
             signals = getattr(self, signals_id)
             return (timestamps, signals)
 
-        event_pointer = self._get_signal_start_byte()
+        event_pointer = self._signal_start_byte
 
         self._reader.move_pointer_to(event_pointer)
 
@@ -204,7 +221,7 @@ class UDBFParser(object):
         i = 0
         while self._reader.current_pointer + event_length < data_length:
             timestamp = self._reader.unpack("Q", 8)
-            timestamp = self._get_time_stamp(timestamp)
+            timestamp = self._get_timestamp(timestamp)
             timestamps[i] = timestamp
             event_signal_data = []
             for channel in range(self.number_of_channels):
@@ -230,8 +247,14 @@ class UDBFParser(object):
 
         return (timestamps, signals)
 
-    def _get_time_stamp(self, timestamp):
+    def _get_timestamp(self, timestamp: int) -> datetime:
+        """Returns timestamp from UDBF data given offset (ole_time_zero).
 
+        Args:
+            timestamp (int): Gantner timestamp information
+        Returns:
+            datetime.datetime: Timestamp
+        """
         seconds_per_day = 60. * 60. * 24.
         day_float = float(timestamp) * self.second_factor
         day_float /= seconds_per_day
@@ -239,7 +262,14 @@ class UDBFParser(object):
 
         return self._ole_time_zero + timedelta(days=day_float)
 
-    def _get_variable_type(self, channel):
+    def _get_variable_type(self, channel: int):
+        """Variable type for the channel.
+
+        Args:
+            channel (int): ID of the channel.
+        Returns:
+            (str, int): Type and number of bytes
+        """
 
         variable_type = self.variable_types[channel]
         return self.variable_type_conversion[variable_type]
@@ -258,8 +288,9 @@ class UDBFParser(object):
 
         self._sampling_rate = (float(value[0]), value[1])
 
-    def _get_signal_start_byte(self):
-        """
+    @property
+    def _signal_start_byte(self):
+        """       
         From UDBF data sheet:
         8.6.2.2
         Separation Chars:
