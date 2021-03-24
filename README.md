@@ -7,7 +7,7 @@ The class UDBFFileReader can be used to read a given UDBF file while the class U
 The "tests"-folder contains a small example UDBF file and the reader script "udbf_file_reader.py" for testing. Run
 
 ```
-udbf_file_reader.py --help
+python tests/udbf_file_reader.py --help
 ```
 
 for usage information.
