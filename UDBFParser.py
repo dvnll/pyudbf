@@ -83,7 +83,7 @@ class BytesReader(object):
         string = []
         for i in range(length):
             field = self.unpack("c", 1)
-            field = field.decode("UTF-8", errors="strict")
+            field = field.decode("'windows-1252", errors="strict")  # special characters (e.g. units with greek letters)
             field = field.rstrip("\x00")
             string.append(str(field))
 
@@ -109,7 +109,9 @@ class UDBFParser(object):
         self._reader = reader
 
         self._ole_time_zero = datetime(1899, 12, 30, 0, 0, 0)
-        self.variable_type_conversion = {1: ("?", 1), 8: ("f", 4)}
+        self.variable_type_conversion = {0: ('-', 0), 1: ("?", 1), 2: ("b", 1), 3: ("B", 1), 4: ("h", 2), 5: ("H", 2),
+                                         6: ('i', 4), 7: ('I', 4), 8: ("f", 4), 9: ('B', 1), 10: ('H', 2), 11: ('I', 4),
+                                         12: ('d', 8), 13: ('q', 8), 14: ('Q', 8), 15: ('Q', 8)}
 
         self.version = self._reader.unpack("H", 2)
         self.vendor_length = self._reader.unpack("H", 2)
