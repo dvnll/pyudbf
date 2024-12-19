@@ -103,7 +103,7 @@ class UDBFData:
 
         Args:
             outfile (str): Name of the output file. Appends to file when
-                           the file already exists."
+                           the file already exists.
         """
 
         amplitude_array = []
@@ -143,3 +143,11 @@ class UDBFData:
             channel (int): Channel id.
         """
         return self.channel_signals[channel]
+
+    def channel(self, name: str) -> list:
+        """List of data in the given channel corresponding to self.timestamps.
+
+        Args:
+            name (str): Channel name
+        """
+        return self.channel_signals[self.header.channel_names.index(name)]
