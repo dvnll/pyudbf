@@ -26,13 +26,13 @@ or
 
 ### Installation via pip of downloaded code
 
-`python -m pip install -e <path>`
+`python -m pip install -e path`
 
 or
 
-`pip install -e <path>`
+`pip install -e path`
 
-where "<path>" needs to be replaced by the actual local directory path to the downloaded files. Prior to the package installation the zipped files need to be extracted.
+where "path" needs to be replaced by the actual local directory path to the downloaded files. Prior to the package installation the zipped files need to be extracted.
 
 ### Import in own projects
 
