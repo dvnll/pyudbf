@@ -15,7 +15,7 @@ class UDBFFileReader(UDBFData):
         self.infile = infile
         with open(infile, mode="rb") as fin:
             data = fin.read()
-	
+
         reader = BytesReader(data)
         parser = UDBFParser(reader)
 

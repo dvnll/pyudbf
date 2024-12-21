@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 import sys
 
@@ -26,5 +26,6 @@ description += "(\"Universal Data Bin File\") data format version 107."
 setup(name="pyudbf",
       version=PKG_VERSION,
       description=description,
+      packages=find_packages(include=['pyudbf', 'UDBFData', 'UDBFParser']),
       license="MIT",
       install_requires=["numpy", "typing", "datetime"])
