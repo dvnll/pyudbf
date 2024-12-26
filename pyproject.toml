@@ -15,7 +15,7 @@ dependencies = [
     "numpy >= 2.0.0",
     "datetime"
 ]
-version = "0.2.43"
+version = "0.3.0"
 
 classifiers = [
     "Programming Language :: Python :: 3",
