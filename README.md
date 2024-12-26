@@ -1,5 +1,4 @@
 # pyudbf
-## General
 A python implementation of the UDBF ("Universal Data Bin File") data format version 1.07. The UDBF format is e.g. frequently used for data exchange with 
 Gantner Instruments data acquisition systems.
 
@@ -17,7 +16,7 @@ python tests/udbf_file_reader.py --help
 python tests/udbf_file_reader.py --in tests/example.udbf
 ```
 
-## Example for usage in own projects
+### Example usage
 The following python code provides an entry point for the usage of pyudbf in own projects.
 
 ```
