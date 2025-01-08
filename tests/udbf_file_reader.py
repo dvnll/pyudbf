@@ -1,4 +1,4 @@
-from pyudbf import UDBFFileReader
+from pyudbf.UDBFFileReader import UDBFFileReader
 import argparse
 import os
 import pprint

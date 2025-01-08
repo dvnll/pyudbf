@@ -1,4 +1,4 @@
-from UDBFData import UDBFHeader
+from pyudbf.UDBFData import UDBFHeader
 from datetime import datetime, timedelta
 import numpy as np
 import struct
@@ -71,7 +71,8 @@ class BytesReader(object):
         return value
 
     def read_byte_string(self, length: int) -> str:
-        """Read byte by byte for given lengths and interpret it as UTF-8 string.
+        """Read byte by byte for given lengths and interpret it as
+           UTF-8 string.
 
         Args:
             length (int): Number of bytes to read.
@@ -83,7 +84,7 @@ class BytesReader(object):
         string = []
         for i in range(length):
             field = self.unpack("c", 1)
-            field = field.decode("'windows-1252", errors="strict")  # special characters (e.g. units with greek letters)
+            field = field.decode("'windows-1252", errors="strict")  # special characters (e.g. units with greek letters) # noqa: E501
             field = field.rstrip("\x00")
             string.append(str(field))
 
@@ -100,7 +101,7 @@ class UDBFParser(object):
     Attributes:
         header (UDBFHeader): Meta information for the data.
         sampling_rate ((float, str)): Value and unit of the data sampling rate.
-        _signal_start_byte (int): Pointer position where the signal 
+        _signal_start_byte (int): Pointer position where the signal
                                   information in the UDBF data starts.
     """
 
@@ -109,9 +110,9 @@ class UDBFParser(object):
         self._reader = reader
 
         self._ole_time_zero = datetime(1899, 12, 30, 0, 0, 0)
-        self.variable_type_conversion = {0: ('-', 0), 1: ("?", 1), 2: ("b", 1), 3: ("B", 1), 4: ("h", 2), 5: ("H", 2),
-                                         6: ('i', 4), 7: ('I', 4), 8: ("f", 4), 9: ('B', 1), 10: ('H', 2), 11: ('I', 4),
-                                         12: ('d', 8), 13: ('q', 8), 14: ('Q', 8), 15: ('Q', 8)}
+        self.variable_type_conversion = {0: ('-', 0), 1: ("?", 1), 2: ("b", 1), 3: ("B", 1), 4: ("h", 2), 5: ("H", 2),  # noqa: E501
+                                         6: ('i', 4), 7: ('I', 4), 8: ("f", 4), 9: ('B', 1), 10: ('H', 2), 11: ('I', 4),  # noqa: E501
+                                         12: ('d', 8), 13: ('q', 8), 14: ('Q', 8), 15: ('Q', 8)}  # noqa: E501
 
         self.version = self._reader.unpack("H", 2)
         self.vendor_length = self._reader.unpack("H", 2)
@@ -292,7 +293,7 @@ class UDBFParser(object):
 
     @property
     def _signal_start_byte(self):
-        """       
+        """
         From UDBF data sheet:
         8.6.2.2
         Separation Chars:
